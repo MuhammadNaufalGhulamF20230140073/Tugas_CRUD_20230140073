@@ -1,5 +1,7 @@
 TAMPILAN WEB
 <img width="1915" height="977" alt="image" src="https://github.com/user-attachments/assets/cea40dda-97e4-41b0-b4f9-c9b24961a884" />
+DB
+<img width="1918" height="952" alt="image" src="https://github.com/user-attachments/assets/212970ed-7946-4a48-8178-dbf7e8d7ae50" />
 
 
 🚀 KTP Management API Documentation
