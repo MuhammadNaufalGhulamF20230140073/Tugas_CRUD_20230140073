@@ -45,3 +45,10 @@ public class KtpController {
         return ResponseEntity.ok(ktpService.updateKtp(id, ktpDto));
     }
 
+    // DELETE: Hapus KTP
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteKtp(@PathVariable Integer id) {
+        ktpService.deleteKtp(id);
+        return ResponseEntity.ok("Data KTP berhasil dihapus!");
+    }
+}
