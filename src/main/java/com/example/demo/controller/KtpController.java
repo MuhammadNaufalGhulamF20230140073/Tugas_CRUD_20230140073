@@ -5,7 +5,6 @@ import com.example.demo.service.KtpService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.jdbc.datasource.IsolationLevelDataSourceAdapter;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -39,3 +38,10 @@ public class KtpController {
     public ResponseEntity<KtpDto> getKtpById(@PathVariable Integer id) {
         return ResponseEntity.ok(ktpService.getKtpById(id));
     }
+
+    // PUT: Update KTP
+    @PutMapping("/{id}")
+    public ResponseEntity<KtpDto> updateKtp(@PathVariable Integer id, @RequestBody KtpDto ktpDto) {
+        return ResponseEntity.ok(ktpService.updateKtp(id, ktpDto));
+    }
+
