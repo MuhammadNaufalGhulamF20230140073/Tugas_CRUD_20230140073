@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>CRUD Data KTP</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background-color: #f4f4f9; }
+        h2 { color: #333; }
+        .container { display: flex; gap: 20px; }
+        .form-section, .table-section { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        .form-section { flex: 1; }
+        .table-section { flex: 2; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; font-weight: bold; margin-bottom: 5px; }
+        input, select { width: 100%; padding: 8px; box-sizing: border-box; }
+        button { padding: 10px 15px; background-color: #28a745; color: white; border: none; cursor: pointer; border-radius: 4px; }
+        button.btn-clear { background-color: #6c757d; }
+        button:hover { opacity: 0.8; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+        th { background-color: #007bff; color: white; }
+        .btn-edit { background-color: #ffc107; color: black; padding: 5px 10px; }
+        .btn-delete { background-color: #dc3545; color: white; padding: 5px 10px; }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+
+<h2>Aplikasi Pendataan KTP Sederhana</h2>
+
+<div class="container">
+    <div class="form-section">
+        <h3 id="formTitle">Tambah Data KTP</h3>
+        <input type="hidden" id="ktpId">
+        <div class="form-group">
+            <label>Nomor KTP</label>
+            <input type="text" id="nomorKtp" maxlength="16" placeholder="Masukkan 16 digit NIK">
+        </div>
+        <div class="form-group">
+            <label>Nama Lengkap</label>
+            <input type="text" id="namaLengkap" placeholder="Nama Lengkap">
+        </div>
+        <div class="form-group">
+            <label>Alamat</label>
+            <input type="text" id="alamat" placeholder="Alamat">
+        </div>
+        <div class="form-group">
+            <label>Tanggal Lahir</label>
+            <input type="date" id="tanggalLahir">
+        </div>
+        <div class="form-group">
+            <label>Jenis Kelamin</label>
+            <select id="jenisKelamin">
+                <option value="">-- Pilih --</option>
+                <option value="Laki-laki">Laki-laki</option>
+                <option value="Perempuan">Perempuan</option>
+            </select>
+        </div>
+        <button id="btnSave">Simpan Data</button>
+        <button class="btn-clear" id="btnClear">Batal / Bersihkan</button>
+    </div>
+
+    <div class="table-section">
+        <h3>Daftar KTP</h3>
+        <table>
+            <thead>
+            <tr>
+                <th>NIK</th>
+                <th>Nama</th>
+                <th>Alamat</th>
+                <th>Tgl Lahir</th>
+                <th>J. Kelamin</th>
+                <th>Aksi</th>
+            </tr>
+            </thead>
+            <tbody id="tableBody">
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        const API_URL = "http://localhost:8080/ktp";
+
+        // 1. Fungsi GET: Load Data
+        function loadData() {
+            $.ajax({
+                url: API_URL,
+                type: "GET",
+                success: function(response) {
+                    let html = '';
+                    response.forEach(function(ktp) {
+                        html += `<tr>
+                            <td>${ktp.nomorKtp}</td>
+                            <td>${ktp.namaLengkap}</td>
+                            <td>${ktp.alamat}</td>
+                            <td>${ktp.tanggalLahir}</td>
+                            <td>${ktp.jenisKelamin}</td>
+                            <td>
+                                <button class="btn-edit" onclick="editData(${ktp.id})">Edit</button>
+                                <button class="btn-delete" onclick="deleteData(${ktp.id})">Hapus</button>
+                            </td>
+                        </tr>`;
+                    });
+                    $("#tableBody").html(html);
+                },
+                error: function(err) {
+                    console.error("Gagal mengambil data", err);
+                }
+            });
+        }
+
+        // Panggil saat halaman pertama kali dibuka
+        loadData();
+
+        // 2. Fungsi POST (Tambah) & PUT (Update)
+        $("#btnSave").click(function() {
+            const id = $("#ktpId").val();
+            const dataKtp = {
+                nomorKtp: $("#nomorKtp").val(),
+                namaLengkap: $("#namaLengkap").val(),
+                alamat: $("#alamat").val(),
+                tanggalLahir: $("#tanggalLahir").val(),
+                jenisKelamin: $("#jenisKelamin").val()
+            };
+
+            // Validasi Frontend Sederhana
+            if(!dataKtp.nomorKtp || !dataKtp.namaLengkap || !dataKtp.tanggalLahir || !dataKtp.jenisKelamin) {
+                alert("Mohon lengkapi semua data!");
+                return;
+            }
+
+            if (id) {
+                // Jika ada ID -> UPDATE (PUT)
+                $.ajax({
+                    url: API_URL + "/" + id,
+                    type: "PUT",
+                    contentType: "application/json",
+                    data: JSON.stringify(dataKtp),
+                    success: function() {
+                        alert("Data berhasil diubah!");
+                        clearForm();
+                        loadData();
+                    },
+                    error: function() { alert("Gagal mengubah data!"); }
+                });
+            } else {
+                // Jika tidak ada ID -> TAMBAH (POST)
+                $.ajax({
+                    url: API_URL,
+                    type: "POST",
+                    contentType: "application/json",
+                    data: JSON.stringify(dataKtp),
+                    success: function() {
+                        alert("Data berhasil ditambahkan!");
+                        clearForm();
+                        loadData();
+                    },
+                    error: function(xhr) {
+                        // Menangkap error handling NIK Ganda dari backend
+                        alert(xhr.responseText || "Gagal menambahkan data!");
+                    }
+                });
+            }
+        });
+
+        // 3. Fungsi GET by ID untuk Edit (Ditaruh di global scope agar bisa dipanggil onclick)
+        window.editData = function(id) {
+            $.ajax({
+                url: API_URL + "/" + id,
+                type: "GET",
+                success: function(ktp) {
+                    $("#ktpId").val(ktp.id);
+                    $("#nomorKtp").val(ktp.nomorKtp);
+                    $("#namaLengkap").val(ktp.namaLengkap);
+                    $("#alamat").val(ktp.alamat);
+                    $("#tanggalLahir").val(ktp.tanggalLahir);
+                    $("#jenisKelamin").val(ktp.jenisKelamin);
+                    $("#formTitle").text("Edit Data KTP");
+                    $("#btnSave").text("Update Data");
+                }
+            });
+        };
+
+        // 4. Fungsi DELETE
+        window.deleteData = function(id) {
+            if(confirm("Apakah Anda yakin ingin menghapus data ini?")) {
+                $.ajax({
+                    url: API_URL + "/" + id,
+                    type: "DELETE",
+                    success: function(response) {
+                        alert(response); // Notifikasi feedback
+                        loadData(); // Load data tanpa refresh web
+                    },
+                    error: function() { alert("Gagal menghapus data!"); }
+                });
+            }
+        };
+
+        // Fungsi utility bersihkan form
+        $("#btnClear").click(clearForm);
+        function clearForm() {
+            $("#ktpId").val("");
+            $("#nomorKtp").val("");
+            $("#namaLengkap").val("");
+            $("#alamat").val("");
+            $("#tanggalLahir").val("");
+            $("#jenisKelamin").val("");
+            $("#formTitle").text("Tambah Data KTP");
+            $("#btnSave").text("Simpan Data");
+        }
+    });
+</script>
+</body>
+</html>
