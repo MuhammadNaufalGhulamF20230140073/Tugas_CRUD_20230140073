@@ -5,6 +5,7 @@ import com.example.demo.service.KtpService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.datasource.IsolationLevelDataSourceAdapter;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -33,3 +34,8 @@ public class KtpController {
         return ResponseEntity.ok(ktpService.getAllKtp());
     }
 
+    // GET: Ambil berdasarkan ID
+    @GetMapping("/{id}")
+    public ResponseEntity<KtpDto> getKtpById(@PathVariable Integer id) {
+        return ResponseEntity.ok(ktpService.getKtpById(id));
+    }
