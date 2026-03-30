@@ -13,7 +13,7 @@ Fungsi: Menambahkan data KTP penduduk baru ke database.
 
 Request Body (JSON):
 
-JSON
+```JSON
 {
   "nomorKtp": "3201010101900001",
   "namaLengkap": "Budi Santoso",
@@ -32,6 +32,7 @@ JSON
   "tanggalLahir": "1990-01-01",
   "jenisKelamin": "Laki-laki"
 }
+```
 2. 📖 Melihat Seluruh Data KTP (GET)
 Endpoint: /ktp
 
@@ -39,7 +40,7 @@ Fungsi: Mengambil dan menampilkan semua data KTP yang ada di database.
 
 Respon Sukses (200 OK):
 
-JSON
+```JSON
 [
   {
     "id": 1,
@@ -58,12 +59,13 @@ JSON
     "jenisKelamin": "Perempuan"
   }
 ]
+```
 3. 📖 Melihat Data KTP Spesifik (GET)
 Endpoint: /ktp/{id}  (Contoh: /ktp/1) Fungsi: Mengambil detail satu data KTP berdasarkan ID-nya (berguna saat menekan tombol Edit di frontend).
 
 Respon Sukses (200 OK):
 
-JSON
+```JSON
 {
   "id": 1,
   "nomorKtp": "3201010101900001",
@@ -72,12 +74,13 @@ JSON
   "tanggalLahir": "1990-01-01",
   "jenisKelamin": "Laki-laki"
 }
+```
 4. ✏️ Edit / Update Data KTP (PUT)
 Endpoint: /ktp/{id}  (Contoh: /ktp/1) Fungsi: Memperbarui data KTP penduduk yang sudah ada berdasarkan ID.
 
 Request Body (JSON):
 
-JSON
+```JSON
 {
   "nomorKtp": "3201010101900001",
   "namaLengkap": "Budi Santoso Updated",
@@ -96,10 +99,11 @@ JSON
   "tanggalLahir": "1990-01-01",
   "jenisKelamin": "Laki-laki"
 }
+
+```
 5. 🗑️ Hapus Data KTP (DELETE)
 Endpoint: /ktp/{id}  (Contoh: /ktp/1) Fungsi: Menghapus data KTP penduduk dari database secara permanen.
 
 Respon Sukses (200 OK):
-
-Plaintext
+```
 Data KTP berhasil dihapus!
