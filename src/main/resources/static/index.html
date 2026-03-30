@@ -2,47 +2,237 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>CRUD Data KTP</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRUD Data KTP Modern</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <style>
-        body { font-family: Arial, sans-serif; margin: 20px; background-color: #f4f4f9; }
-        h2 { color: #333; }
-        .container { display: flex; gap: 20px; }
-        .form-section, .table-section { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
-        .form-section { flex: 1; }
-        .table-section { flex: 2; }
-        .form-group { margin-bottom: 15px; }
-        label { display: block; font-weight: bold; margin-bottom: 5px; }
-        input, select { width: 100%; padding: 8px; box-sizing: border-box; }
-        button { padding: 10px 15px; background-color: #28a745; color: white; border: none; cursor: pointer; border-radius: 4px; }
-        button.btn-clear { background-color: #6c757d; }
-        button:hover { opacity: 0.8; }
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-        th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
-        th { background-color: #007bff; color: white; }
-        .btn-edit { background-color: #ffc107; color: black; padding: 5px 10px; }
-        .btn-delete { background-color: #dc3545; color: white; padding: 5px 10px; }
+        /* Variabel Warna Tema */
+        :root {
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --secondary: #f3f4f6;
+            --text-dark: #111827;
+            --text-muted: #6b7280;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h2 {
+            font-weight: 700;
+            font-size: 28px;
+            color: var(--text-dark);
+            margin-bottom: 5px;
+            background: -webkit-linear-gradient(45deg, var(--primary), #ec4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header p {
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        .container {
+            display: flex;
+            gap: 24px;
+            max-width: 1200px;
+            margin: 0 auto;
+            flex-wrap: wrap; /* Agar responsif di HP */
+        }
+
+        /* Card Style */
+        .card {
+            background: var(--card-bg);
+            padding: 24px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.03);
+            border: 1px solid #f1f5f9;
+        }
+
+        .form-section { flex: 1; min-width: 300px; }
+        .table-section { flex: 2; min-width: 500px; overflow-x: auto;}
+
+        h3 {
+            margin-top: 0;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Form Controls */
+        .form-group { margin-bottom: 16px; }
+
+        label {
+            display: block;
+            font-weight: 500;
+            font-size: 13px;
+            margin-bottom: 6px;
+            color: var(--text-muted);
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px 14px;
+            box-sizing: border-box;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            background-color: #f8fafc;
+            color: var(--text-dark);
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+            background-color: #fff;
+        }
+
+        /* Buttons */
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        button {
+            padding: 10px 16px;
+            font-weight: 600;
+            font-size: 14px;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        #btnSave {
+            background-color: var(--primary);
+            flex: 1;
+            box-shadow: 0 4px 10px rgba(79, 70, 229, 0.2);
+        }
+
+        #btnSave:hover { background-color: var(--primary-hover); transform: translateY(-1px); }
+
+        .btn-clear {
+            background-color: white;
+            color: var(--text-muted);
+            border: 1px solid #e2e8f0;
+        }
+
+        .btn-clear:hover { background-color: #f1f5f9; color: var(--text-dark); }
+
+        /* Table */
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-top: 10px;
+        }
+
+        th, td {
+            padding: 14px;
+            text-align: left;
+            font-size: 14px;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        th {
+            background-color: #f8fafc;
+            color: var(--text-muted);
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 12px;
+            letter-spacing: 0.5px;
+        }
+
+        th:first-child { border-top-left-radius: 8px; border-bottom-left-radius: 8px; }
+        th:last-child { border-top-right-radius: 8px; border-bottom-right-radius: 8px; }
+
+        tbody tr:hover { background-color: #f8fafc; }
+
+        /* Action Buttons in Table */
+        .action-btns {
+            display: flex;
+            gap: 8px;
+        }
+
+        .action-btns button {
+            padding: 6px 10px;
+            font-size: 12px;
+            border-radius: 6px;
+            box-shadow: none;
+        }
+
+        .btn-edit { background-color: rgba(245, 158, 11, 0.1); color: var(--warning); }
+        .btn-edit:hover { background-color: var(--warning); color: white; }
+
+        .btn-delete { background-color: rgba(239, 68, 68, 0.1); color: var(--danger); }
+        .btn-delete:hover { background-color: var(--danger); color: white; }
+
+        /* Badge untuk Jenis Kelamin */
+        .badge {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        .badge-male { background-color: #e0f2fe; color: #0284c7; }
+        .badge-female { background-color: #fce7f3; color: #db2777; }
+
     </style>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
 
-<h2>Aplikasi Pendataan KTP Sederhana</h2>
+<div class="header">
+    <h2><i class="fa-solid fa-id-card-clip"></i> DataKu KTP</h2>
+    <p>Sistem Pengelolaan Data Identitas Sederhana & Cepat</p>
+</div>
 
 <div class="container">
-    <div class="form-section">
-        <h3 id="formTitle">Tambah Data KTP</h3>
+    <div class="card form-section">
+        <h3 id="formTitle"><i class="fa-solid fa-user-plus text-primary"></i> Form Data Baru</h3>
         <input type="hidden" id="ktpId">
         <div class="form-group">
-            <label>Nomor KTP</label>
-            <input type="text" id="nomorKtp" maxlength="16" placeholder="Masukkan 16 digit NIK">
+            <label>Nomor KTP (NIK)</label>
+            <input type="text" id="nomorKtp" maxlength="16" placeholder="Masukkan 16 digit angka">
         </div>
         <div class="form-group">
             <label>Nama Lengkap</label>
-            <input type="text" id="namaLengkap" placeholder="Nama Lengkap">
+            <input type="text" id="namaLengkap" placeholder="Contoh: Budi Santoso">
         </div>
         <div class="form-group">
-            <label>Alamat</label>
-            <input type="text" id="alamat" placeholder="Alamat">
+            <label>Alamat Lengkap</label>
+            <input type="text" id="alamat" placeholder="Nama jalan, RT/RW, Kelurahan">
         </div>
         <div class="form-group">
             <label>Tanggal Lahir</label>
@@ -51,26 +241,28 @@
         <div class="form-group">
             <label>Jenis Kelamin</label>
             <select id="jenisKelamin">
-                <option value="">-- Pilih --</option>
+                <option value="">-- Pilih Gender --</option>
                 <option value="Laki-laki">Laki-laki</option>
                 <option value="Perempuan">Perempuan</option>
             </select>
         </div>
-        <button id="btnSave">Simpan Data</button>
-        <button class="btn-clear" id="btnClear">Batal / Bersihkan</button>
+        <div class="btn-group">
+            <button class="btn-clear" id="btnClear"><i class="fa-solid fa-rotate-right"></i> Batal</button>
+            <button id="btnSave"><i class="fa-solid fa-floppy-disk"></i> Simpan Data</button>
+        </div>
     </div>
 
-    <div class="table-section">
-        <h3>Daftar KTP</h3>
+    <div class="card table-section">
+        <h3><i class="fa-solid fa-table-list"></i> Daftar Penduduk Terdaftar</h3>
         <table>
             <thead>
             <tr>
                 <th>NIK</th>
-                <th>Nama</th>
+                <th>Nama Lengkap</th>
                 <th>Alamat</th>
                 <th>Tgl Lahir</th>
-                <th>J. Kelamin</th>
-                <th>Aksi</th>
+                <th>Gender</th>
+                <th>Opsi</th>
             </tr>
             </thead>
             <tbody id="tableBody">
@@ -91,15 +283,21 @@
                 success: function(response) {
                     let html = '';
                     response.forEach(function(ktp) {
+                        // UI Logic untuk Badge Warna Jenis Kelamin
+                        let badgeClass = ktp.jenisKelamin === 'Laki-laki' ? 'badge-male' : 'badge-female';
+                        let jkBadge = `<span class="badge ${badgeClass}">${ktp.jenisKelamin}</span>`;
+
                         html += `<tr>
-                            <td>${ktp.nomorKtp}</td>
+                            <td style="font-weight: 500;">${ktp.nomorKtp}</td>
                             <td>${ktp.namaLengkap}</td>
                             <td>${ktp.alamat}</td>
                             <td>${ktp.tanggalLahir}</td>
-                            <td>${ktp.jenisKelamin}</td>
+                            <td>${jkBadge}</td>
                             <td>
-                                <button class="btn-edit" onclick="editData(${ktp.id})">Edit</button>
-                                <button class="btn-delete" onclick="deleteData(${ktp.id})">Hapus</button>
+                                <div class="action-btns">
+                                    <button class="btn-edit" onclick="editData(${ktp.id})" title="Edit Data"><i class="fa-solid fa-pen"></i></button>
+                                    <button class="btn-delete" onclick="deleteData(${ktp.id})" title="Hapus Data"><i class="fa-solid fa-trash"></i></button>
+                                </div>
                             </td>
                         </tr>`;
                     });
@@ -126,10 +324,14 @@
             };
 
             // Validasi Frontend Sederhana
-            if(!dataKtp.nomorKtp || !dataKtp.namaLengkap || !dataKtp.tanggalLahir || !dataKtp.jenisKelamin) {
-                alert("Mohon lengkapi semua data!");
+            if(!dataKtp.nomorKtp || !dataKtp.namaLengkap || !dataKtp.alamat || !dataKtp.tanggalLahir || !dataKtp.jenisKelamin) {
+                alert("⚠️ Peringatan: Mohon lengkapi semua data formulir!");
                 return;
             }
+
+            // Efek loading pada tombol
+            let originalText = $(this).html();
+            $(this).html('<i class="fa-solid fa-spinner fa-spin"></i> Memproses...').prop('disabled', true);
 
             if (id) {
                 // Jika ada ID -> UPDATE (PUT)
@@ -139,11 +341,12 @@
                     contentType: "application/json",
                     data: JSON.stringify(dataKtp),
                     success: function() {
-                        alert("Data berhasil diubah!");
+                        alert("✅ Data berhasil diubah!");
                         clearForm();
                         loadData();
                     },
-                    error: function() { alert("Gagal mengubah data!"); }
+                    error: function() { alert("❌ Gagal mengubah data!"); },
+                    complete: function() { $("#btnSave").html(originalText).prop('disabled', false); }
                 });
             } else {
                 // Jika tidak ada ID -> TAMBAH (POST)
@@ -153,19 +356,19 @@
                     contentType: "application/json",
                     data: JSON.stringify(dataKtp),
                     success: function() {
-                        alert("Data berhasil ditambahkan!");
+                        alert("✅ Data berhasil ditambahkan!");
                         clearForm();
                         loadData();
                     },
                     error: function(xhr) {
-                        // Menangkap error handling NIK Ganda dari backend
-                        alert(xhr.responseText || "Gagal menambahkan data!");
-                    }
+                        alert("❌ Gagal: " + (xhr.responseText || "Terjadi kesalahan server!"));
+                    },
+                    complete: function() { $("#btnSave").html(originalText).prop('disabled', false); }
                 });
             }
         });
 
-        // 3. Fungsi GET by ID untuk Edit (Ditaruh di global scope agar bisa dipanggil onclick)
+        // 3. Fungsi GET by ID untuk Edit
         window.editData = function(id) {
             $.ajax({
                 url: API_URL + "/" + id,
@@ -177,23 +380,27 @@
                     $("#alamat").val(ktp.alamat);
                     $("#tanggalLahir").val(ktp.tanggalLahir);
                     $("#jenisKelamin").val(ktp.jenisKelamin);
-                    $("#formTitle").text("Edit Data KTP");
-                    $("#btnSave").text("Update Data");
+
+                    $("#formTitle").html('<i class="fa-solid fa-pen-to-square text-warning"></i> Edit Data');
+                    $("#btnSave").html('<i class="fa-solid fa-check"></i> Update Data');
+
+                    // Scroll ke atas saat edit (opsional tapi bagus untuk UX)
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
                 }
             });
         };
 
         // 4. Fungsi DELETE
         window.deleteData = function(id) {
-            if(confirm("Apakah Anda yakin ingin menghapus data ini?")) {
+            if(confirm("⚠️ Peringatan: Apakah Anda yakin ingin menghapus data KTP ini secara permanen?")) {
                 $.ajax({
                     url: API_URL + "/" + id,
                     type: "DELETE",
                     success: function(response) {
-                        alert(response); // Notifikasi feedback
-                        loadData(); // Load data tanpa refresh web
+                        alert("🗑️ " + response);
+                        loadData();
                     },
-                    error: function() { alert("Gagal menghapus data!"); }
+                    error: function() { alert("❌ Gagal menghapus data!"); }
                 });
             }
         };
@@ -207,8 +414,8 @@
             $("#alamat").val("");
             $("#tanggalLahir").val("");
             $("#jenisKelamin").val("");
-            $("#formTitle").text("Tambah Data KTP");
-            $("#btnSave").text("Simpan Data");
+            $("#formTitle").html('<i class="fa-solid fa-user-plus text-primary"></i> Form Data Baru');
+            $("#btnSave").html('<i class="fa-solid fa-floppy-disk"></i> Simpan Data');
         }
     });
 </script>
